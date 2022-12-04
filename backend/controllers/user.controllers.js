@@ -10,13 +10,31 @@ ctrlUser.getUsers = async (req, res) =>
         return res.json({Users});
 }
 
+ctrlUser.getUser = async (req, res) =>
+{
+        const userName = req.body;
+
+        try {
+                const searchUser = await User.findOne(userName)
+                return res.json({
+                        msg: "Usuario encontrado",
+                        searchUser
+                });
+        } catch (error) {
+                console.log(error)
+                return res.status(400).json({
+                        msg:"Hubo un error al buscar al usuario"
+                })
+        }
+}
+
 ctrlUser.postUser = async (req, res) =>
 {
         console.log(req.body);
         const { userName, userEmail, userPassword: receivedPassword, userSpecialty, userPasswordConfirm } = req.body;
 
         
-        if (!userName || !userEmail || !receivedPassword || !userSpecialty){
+        if (!userName || !userEmail || !receivedPassword){
                 console.log('Datos faltantes')
                 return res.status(400).json({
                         msg: "Hubo un error al crear al usuario"

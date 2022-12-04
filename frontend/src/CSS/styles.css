@@ -30,6 +30,15 @@
                 padding: 10px;
                 margin: 5px;
         }
+        #navShape {
+                background-color: var(--main-color);
+                width: 50px;
+                height: 76px;
+                position: absolute;
+                left: -1px;
+                top: -0px;
+                clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
+        }
                 
                 
 
@@ -106,20 +115,24 @@
 
 #landing-text {
         position: absolute;
-        padding: 50px;
+        left: 50px;
+        top: 100px;
         width: 50%;
         color: white;
 }
+        #titleText {
+                font-size: 100px;
+        }
+        #subtitleText {
+                margin-top: -20px;
+                margin-left: 10px;
+                opacity: 0.8;
+                font-size: 20px;
+        }
 #landing-video {
         width: 100%;
         position: absolute;
         z-index: -1;
         filter: brightness(50%);
 }
-#landing-separator {
-        background-color: white;
-        text-align: center;
-        position: relative;
-        width: 100%;
-        top: 700px;
-}
+

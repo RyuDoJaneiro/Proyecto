@@ -1,13 +1,20 @@
 import Navbar from './components/Navbar'
 import { AppRouter } from './routers/AppRouter'
-import { useEffect, useState } from 'react'
+import { UserContext } from '../context/UserContext'
+import React, { useState } from 'react';
 
 function App() {
-  const [backendData, setBackendData] = useState([{}]);
+
+  const [userData, setUserData] = useState({
+    userData: {},
+    setUserData: () => {}
+  });
 
   return(
     <>
-      <AppRouter/>
+      <UserContext.Provider value={{userData, setUserData}}>
+        <AppRouter/>
+      </UserContext.Provider>
     </>
   )
 }

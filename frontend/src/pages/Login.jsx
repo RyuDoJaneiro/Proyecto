@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../../context/UserContext'
 
 export default function Login() {
 
@@ -20,7 +21,7 @@ export default function Login() {
     redirect: 'follow',
     body: raw
   }
-
+  
   function handleInputChange(event){
     setData({
       ...data,
@@ -28,14 +29,16 @@ export default function Login() {
     });
   }
 
+  const { userData, setUserData } = useContext(UserContext);
+
   async function handleSubmit(event) {
     event.preventDefault();
     const response = await fetch("http://localhost:4000/login", requestOptions)
     const dataToJson = await response.json();
-    setData(dataToJson)
-    navigate('/profile')
-    console.log(dataToJson)
+    await setUserData(dataToJson.user);
+    navigate("/profile");
   }
+  
   return (
         <>
         <Navbar/>

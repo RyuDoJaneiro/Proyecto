@@ -68,7 +68,7 @@ abbr[title] {
         max-width: 35%;
         padding: 20px;
         margin: 30px;
-        border: solid var(--main-color);
+        border: none;
         border-radius: 30px;
         position: absolute;
 }
@@ -88,6 +88,35 @@ abbr[title] {
                 position: absolute;
                 z-index: -1;
                 background: url("https://media.istockphoto.com/id/1160720443/es/vector/patr%C3%B3n-abstracto-vectorial-simple-sin-costuras-con-textura-de-l%C3%ADnea-dorada-sobre-fondo.jpg?s=612x612&w=0&k=20&c=cqkN10B8e0gjVXCCcFiObSWozOz-HRLVUSTv7_USe8Q=");
+        }
+
+#proffesionalData {
+        width: 95%;
+        border-radius: 10px;
+        height: 100px;
+        background-color: white;
+        box-shadow: 5px 3px 20px lightgray;
+        padding: 20px;
+        margin: 8px;
+        transition: 0.3s;
+}
+        #proffesionalData:hover{
+                background-color: #ededed;
+        }
+        #proffesionalAvatar {
+                max-width: 10%;
+        }
+        #proffesionalName {
+                position: relative;
+                left: 80px;
+                bottom: 70px;
+        }
+        #proffesionalSpecialty {
+                position: relative;
+                left: 80px;
+                top: -75px;
+                opacity: 0.5;
+                color: var(--main-color);
         }
 
 #scheduleContainer {

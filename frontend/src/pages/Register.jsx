@@ -1,9 +1,11 @@
 import React, {useState} from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import { useNavigate } from 'react-router-dom'
 
 export default function Register() {
 
+  const navigate = useNavigate();
   const [data, setData] = useState({
     userName: "",
     userEmail: "",
@@ -31,7 +33,8 @@ export default function Register() {
       body: JSON.stringify(data)
     })
     const dataToJson = await response.json();
-    console.log(dataToJson)
+    console.log(dataToJson);
+    navigate("/login");
   }
 
   return (
@@ -43,7 +46,8 @@ export default function Register() {
                     <div className="mb-3">
                       <label htmlFor="UserInput-register" className="form-label">Nombre de usuario</label><br/>
                       <input onChange={handleInputChange} type="text" name='userName' id="UserInput-register" aria-describedby="emailHelp"/>
-                      <select onChange={handleInputChange} id="selectInput-register" name='userSpecialty'>
+                      {false ? (
+                        <select onChange={handleInputChange} id="selectInput-register" name='userSpecialty'>
                         <option disabled defaultValue>Especialidad</option>
                         <option disabled>⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</option>
                         <option>Clínico</option>
@@ -52,6 +56,7 @@ export default function Register() {
                         <option>Dermatólogo</option>
                         <option>Pediatra</option>
                       </select>
+                      ) : (null)}
                     </div>
                     <div className="mb-3">
                       <label htmlFor="EmailInput-register" className="form-label">Correo electrónico</label><br/>

@@ -34,8 +34,9 @@ ctrlAuth.logIn = async (req, res) =>
 
                 const token = await generateJWT({ uid: user._id});
                 return res.json({
+                        session: `Sesión iniciada como ${user.userName}`,
                         token,
-                        session: `Sesión iniciada como ${user.userName}`
+                        user
                 });
 
         } catch (error) {
