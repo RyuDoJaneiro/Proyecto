@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Modal from 'react-bootstrap/Modal'
 
-export default function ShowModal({children, filter}) {
+export default function ShowModal({children, filterSelect}) {
         const [show, setShow] = useState(false);
 
         const handleClose = () => setShow(false);
@@ -14,7 +14,7 @@ export default function ShowModal({children, filter}) {
                 <Modal size='lg' centered show={show} onHide={handleClose}>
                         <Modal.Header closeButton>
                                 <Modal.Title>Buscar profesionales</Modal.Title>
-                                {filter}
+                                {filterSelect}
                         </Modal.Header>
                         <Modal.Body>{children}</Modal.Body>
                 </Modal>
