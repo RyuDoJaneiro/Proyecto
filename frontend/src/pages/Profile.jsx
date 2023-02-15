@@ -3,17 +3,22 @@ import Calendar from 'react-calendar';
 import Navbar from "../components/Navbar";
 import 'react-calendar/dist/Calendar.css';
 import { UserContext } from "../../context/UserContext";
-import Modal from "../components/Modal";
+import Modal from "react-bootstrap/Modal"
 
 const Profile = () => {
-        const { userData } = useContext(UserContext);
+        const userData = useContext(UserContext);
         const [proffesionals, setProffesionals] = useState([]);
+        const [filteredList, setFilteredList] = new useState(proffesionals);
         const [specialty, setSpecialty] = useState('')
+
+        // Modal
+        const [show, setShow] = useState(false);
+        const handleClose = () => setShow(false);
+        const handleShow = () => setShow(true);
 
         useEffect(() => {
           fetch(`http://localhost:4000/users/${specialty}`)
         }, [specialty])
-        
 
         const getProffesionals = async () => {
                 const response = await fetch('http://localhost:4000/users');
@@ -23,6 +28,15 @@ const Profile = () => {
                 }
                 setProffesionals(dataToJson.Users);
                 return dataToJson.Users
+        }
+
+        const filterBySearch = (event) =>
+        {
+                const query = event.target.value;
+                var updatedList = proffesionals.filter((proff) => {
+                        return proff.userSpecialty == query;
+                });
+                setFilteredList(updatedList);
         }
 
         React.useEffect(() => {
@@ -66,41 +80,6 @@ const Profile = () => {
                 )
         }
 
-        // function renderProffesionals()
-        // {
-        //         const searchProffesional = proffesionals.filter(proffesional => console.log([proffesional.userSpecialty, specialty]))
-        //         console.log(searchProffesional)
-        //         searchProffesional.map(proffesional => {
-        //                 if (proffesional.userSpecialty.lenth != "")
-        //                 {
-        //                         return(
-        //                                 <div className="profileData col-12 col-md-6 col-lg-3 mx-auto mx-md-2 my-2" key={proffesional._id}>
-        //                                         <img className="userAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
-        //                                         <h2>{proffesional?.userName}</h2>
-        //                                         <h3 className="specialText">{proffesional?.userSpecialty}</h3>
-        //                                 </div>
-        //                         )
-        //                 }
-        //         })
-
-
-
-        // }
-
-        function renderProffesionals() {
-                proffesionals && proffesionals.map((proffesional) => {
-                        if (proffesional.userSpecialty.length > 0) {
-                                return (
-                                        <div className="profileData col-12 col-md-6 col-lg-3 mx-auto mx-md-2 my-2" key={proffesional._id}>
-                                                <img className="userAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
-                                                <h2>{proffesional?.userName}</h2>
-                                                <h3 className="specialText">{proffesional?.userSpecialty}</h3>
-                                        </div>
-                                )
-                        }
-                })
-        }
-
         return (
                 <>
                         <Navbar />
@@ -108,36 +87,38 @@ const Profile = () => {
                                 <img id="profileBanner" />
                                 <div id="profileData">
                                         <img id="userAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
-                                        <h2>{userData.userName}</h2>
+                                        <h2>{userData.userData.userName}</h2>
                                         <h3 id="specialText">{userData.userSpecialty}</h3>
                                 </div>
                                 <div>
                                         <Calendar id="profileCalendar"/>
-                                        <button id="calendarButton" type="button" data-toggle="modal" data-target="#exampleModal1">Pedir turno</button>
-                                        <Modal filterSelect={
-                                                <select id="filterSelect"
-                                                        onChange={(event) => setSpecialty(event.target.value)}>
-                                                        <option>Clínico</option>
-                                                        <option>Traumatólogo</option>
-                                                        <option>Dentista</option>
-                                                        <option>Dermatólogo</option>
-                                                        <option>Pediatra</option>
-                                                </select>
-                                        }>
-                                                {proffesionals && proffesionals.map((proffesional) => {
-                                                        if (proffesional.userSpecialty.length > 0) {
-                                                                return (
-                                                                        <div id="proffesionalData" key={proffesional._id}>
-                                                                                <img id="proffesionalAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
-                                                                                <h2 id="proffesionalName">{proffesional?.userName}</h2>
-                                                                                <h3 id="proffesionalSpecialty">{proffesional?.userSpecialty}</h3>
-                                                                        </div>
-                                                                )
-                                                        }
-                                                })}
+
+                                        <button id="calendarButton" type="button" onClick={handleShow}>Pedir turno</button>
+                                        
+                                        <Modal show={show} onHide={handleClose} size='lg' centered>
+                                                <Modal.Header closeButton>
+                                                        <Modal.Title>Buscar profesionales</Modal.Title>
+                                                        <select id="filterSelect"
+                                                                onChange={filterBySearch}>
+                                                                <option disabled selected>-- Selecciona una opción --</option>
+                                                                <option>Traumatólogo</option>
+                                                                <option>Dentista</option>
+                                                                <option>Dermatólogo</option>
+                                                                <option>Pediatra</option>
+                                                        </select>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                        {filteredList.map(proffesional => (
+                                                                <div id="proffesionalData" key={proffesional._id}>
+                                                                <img id="proffesionalAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
+                                                                <h2 id="proffesionalName">{proffesional?.userName}</h2>
+                                                                <h3 id="proffesionalSpecialty">{proffesional?.userSpecialty}</h3>
+                                                        </div>
+                                                        ))}
+                                                </Modal.Body>
                                         </Modal>
                                         <div id="scheduleContainer">
-                                                {renderSchedule()}
+                                                <div id="scheduleMessage">Selecciona un día</div>
                                         </div>
                                 </div>
 

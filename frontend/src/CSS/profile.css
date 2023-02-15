@@ -157,3 +157,9 @@ abbr[title] {
                 .arrowIcon {
                         max-width: 30%;
                 }
+        #scheduleMessage {
+                text-align: center;
+                margin-top: 50%;
+                color: gray;
+                font-size: large;
+        }
