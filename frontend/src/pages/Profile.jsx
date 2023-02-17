@@ -10,11 +10,16 @@ const Profile = () => {
         const [proffesionals, setProffesionals] = useState([]);
         const [filteredList, setFilteredList] = new useState(proffesionals);
         const [specialty, setSpecialty] = useState('')
+        const [selectedProff, setSelectedProff] = useState();
 
         // Modal
-        const [show, setShow] = useState(false);
-        const handleClose = () => setShow(false);
-        const handleShow = () => setShow(true);
+        const [showProff, setShowProff] = useState(false);
+        const handleProffClose = () => setShowProff(false);
+        const handleProffShow = () => setShowProff(true);
+
+        const [showTurn, setShowTurn] = useState(false);
+        const handleTurnClose = () => setShowTurn(false);
+        const handleTurnShow = () => setShowTurn(true);
 
         useEffect(() => {
           fetch(`http://localhost:4000/users/${specialty}`)
@@ -42,21 +47,6 @@ const Profile = () => {
         React.useEffect(() => {
                 getProffesionals()
         }, [])
-
-        const Schedule = {
-                scheduleAM: [
-                        "8:00 AM a 8:30 AM",
-                        "8:30 AM a 9:00 AM",
-                        "9:30 AM a 10:00 AM",
-                        "10:00 AM a 10:30 AM"
-                ],
-                schedulePM: [
-                        "17:00 PM a 17:30 PM",
-                        "17:30 PM a 18:00 PM",
-                        "18:00 PM a 18:30 PM",
-                        "18:30 PM a 19:00 PM"
-                ]
-        };
 
         function renderSchedule() {
                 const scheduleList = [];
@@ -93,9 +83,9 @@ const Profile = () => {
                                 <div>
                                         <Calendar id="profileCalendar"/>
 
-                                        <button id="calendarButton" type="button" onClick={handleShow}>Pedir turno</button>
+                                        <button id="calendarButton" type="button" onClick={handleProffShow}>Pedir turno</button>
                                         
-                                        <Modal show={show} onHide={handleClose} size='lg' centered>
+                                        <Modal show={showProff} onHide={handleProffClose} size='lg' centered>
                                                 <Modal.Header closeButton>
                                                         <Modal.Title>Buscar profesionales</Modal.Title>
                                                         <select id="filterSelect"
@@ -109,7 +99,10 @@ const Profile = () => {
                                                 </Modal.Header>
                                                 <Modal.Body>
                                                         {filteredList.map(proffesional => (
-                                                                <div id="proffesionalData" key={proffesional._id}>
+                                                                <div id="proffesionalData" key={proffesional._id} onClick={(event) => {
+                                                                        handleTurnShow();
+                                                                        setSelectedProff(document.getElementById("proffesionalName").innerText);
+                                                                }}>
                                                                 <img id="proffesionalAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
                                                                 <h2 id="proffesionalName">{proffesional?.userName}</h2>
                                                                 <h3 id="proffesionalSpecialty">{proffesional?.userSpecialty}</h3>
@@ -117,6 +110,30 @@ const Profile = () => {
                                                         ))}
                                                 </Modal.Body>
                                         </Modal>
+
+                                        <Modal show={showTurn} onHide={handleTurnClose} size='lg' centered>
+                                                <Modal.Header closeButton>
+                                                                <Modal.Title>Información del turno</Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                                <p>Doctor</p>
+                                                                <p>{selectedProff}</p>
+                                                                <p>Horario</p>
+                                                                <select>
+                                                                        <option disabled>-- AM --</option>
+                                                                        <option>8:00 AM a 8:30 AM</option>
+                                                                        <option>8:30 AM a 9:00 AM</option>
+                                                                        <option>9:30 AM a 10:00 AM</option>
+                                                                        <option>10:00 AM a 10:30 AM</option>
+                                                                        <option disabled>-- PM --</option>
+                                                                        <option>17:00 PM a 17:30 PM</option>
+                                                                        <option>17:30 PM a 18:00 PM</option>
+                                                                        <option>18:00 PM a 18:30 PM</option>
+                                                                        <option>18:30 PM a 19:00 PM</option>
+                                                                </select>
+                                                </Modal.Body>
+                                        </Modal>
+
                                         <div id="scheduleContainer">
                                                 <div id="scheduleMessage">Selecciona un día</div>
                                         </div>
