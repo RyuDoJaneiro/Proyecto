@@ -12,7 +12,7 @@ const Profile = () => {
         const [specialty, setSpecialty] = useState('')
         const [selectedProff, setSelectedProff] = useState();
 
-        // Modal
+        // Modals
         const [showProff, setShowProff] = useState(false);
         const handleProffClose = () => setShowProff(false);
         const handleProffShow = () => setShowProff(true);
@@ -20,6 +20,23 @@ const Profile = () => {
         const [showTurn, setShowTurn] = useState(false);
         const handleTurnClose = () => setShowTurn(false);
         const handleTurnShow = () => setShowTurn(true);
+
+        //Turn data
+        const [turnData, setTurnData] = useState({
+                turnDate: new Date(),
+                turnSchedule: "",
+                turnDescription: "",
+                turnPacient: userData.userData._id,
+                turnDoctor: ""
+        });
+
+        function handleInputChange(event)
+        {
+                setTurnData({
+                        ...turnData,
+                        [event.target.name] : event.target.value
+                })
+        }
 
         useEffect(() => {
           fetch(`http://localhost:4000/users/${specialty}`)
@@ -90,7 +107,7 @@ const Profile = () => {
                                                         <Modal.Title>Buscar profesionales</Modal.Title>
                                                         <select id="filterSelect"
                                                                 onChange={filterBySearch}>
-                                                                <option disabled selected>-- Selecciona una opción --</option>
+                                                                <option disabled>-- Selecciona una opción --</option>
                                                                 <option>Traumatólogo</option>
                                                                 <option>Dentista</option>
                                                                 <option>Dermatólogo</option>
@@ -99,9 +116,14 @@ const Profile = () => {
                                                 </Modal.Header>
                                                 <Modal.Body>
                                                         {filteredList.map(proffesional => (
-                                                                <div id="proffesionalData" key={proffesional._id} onClick={(event) => {
+                                                                <div id="proffesionalData" data-value={proffesional._id} key={proffesional._id} onClick={(event) => {
                                                                         handleTurnShow();
                                                                         setSelectedProff(document.getElementById("proffesionalName").innerText);
+                                                                        setTurnData({turnDate: new Date(),
+                                                                        turnSchedule: "",
+                                                                        turnDescription: "",
+                                                                        turnPacient: userData.userData._id,
+                                                                        turnDoctor: document.getElementById("proffesionalData").getAttribute("data-value")});
                                                                 }}>
                                                                 <img id="proffesionalAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
                                                                 <h2 id="proffesionalName">{proffesional?.userName}</h2>
@@ -116,21 +138,27 @@ const Profile = () => {
                                                                 <Modal.Title>Información del turno</Modal.Title>
                                                 </Modal.Header>
                                                 <Modal.Body>
-                                                                <p>Doctor</p>
-                                                                <p>{selectedProff}</p>
-                                                                <p>Horario</p>
-                                                                <select>
-                                                                        <option disabled>-- AM --</option>
-                                                                        <option>8:00 AM a 8:30 AM</option>
-                                                                        <option>8:30 AM a 9:00 AM</option>
-                                                                        <option>9:30 AM a 10:00 AM</option>
-                                                                        <option>10:00 AM a 10:30 AM</option>
-                                                                        <option disabled>-- PM --</option>
-                                                                        <option>17:00 PM a 17:30 PM</option>
-                                                                        <option>17:30 PM a 18:00 PM</option>
-                                                                        <option>18:00 PM a 18:30 PM</option>
-                                                                        <option>18:30 PM a 19:00 PM</option>
-                                                                </select>
+                                                                <div id="turnDoctorInfo">
+                                                                        <p>Doctor</p>
+                                                                        <p>{selectedProff}</p>
+                                                                </div>
+                                                                <div id="turnSchedule">
+                                                                        <p>Horario</p>
+                                                                        <select onChange={handleInputChange} name="turnSchedule">
+                                                                                <option disabled>-- AM --</option>
+                                                                                <option>8:00 AM a 8:30 AM</option>
+                                                                                <option>8:30 AM a 9:00 AM</option>
+                                                                                <option>9:30 AM a 10:00 AM</option>
+                                                                                <option>10:00 AM a 10:30 AM</option>
+                                                                                <option disabled>-- PM --</option>
+                                                                                <option>17:00 PM a 17:30 PM</option>
+                                                                                <option>17:30 PM a 18:00 PM</option>
+                                                                                <option>18:00 PM a 18:30 PM</option>
+                                                                                <option>18:30 PM a 19:00 PM</option>
+                                                                        </select>
+                                                                </div>
+                                                                <input onChange={handleInputChange} name="turnDate" type="date" />
+                                                                <textarea onChange={handleInputChange} name="turnDescription" id="turnDescription" placeholder="Descripción del turno"></textarea>
                                                 </Modal.Body>
                                         </Modal>
 
