@@ -65,26 +65,19 @@ const Profile = () => {
                 getProffesionals()
         }, [])
 
-        function renderSchedule() {
-                const scheduleList = [];
-
-                Schedule.scheduleAM.forEach(schedule => {
-                        scheduleList.push(
-                                <div key={schedule} className="scheduleSet">
-                                        <div className="scheduleInfo">
-                                                {schedule}
-                                        </div>
-                                        <div className="arrowDiv">
-                                                <img className="arrowIcon" src="https://cdn-icons-png.flaticon.com/512/318/318476.png" />
-                                        </div>
-                                </div>
-                        )
-                });
-                return (
-                        <div>
-                                {scheduleList}
-                        </div>
-                )
+        async function handleSubmit(event)
+        {
+                event.preventDefault();
+                const response = await fetch("http://localhost:4000/turn", {
+                        method: "POST",
+                        mode: "cors",
+                        headers: {
+                          'Content-Type':'application/json'
+                        },
+                        body: JSON.stringify(turnData)
+                      });
+                const dataToJson = response.json();
+                console.log(dataToJson);
         }
 
         return (
@@ -138,6 +131,7 @@ const Profile = () => {
                                                                 <Modal.Title>Información del turno</Modal.Title>
                                                 </Modal.Header>
                                                 <Modal.Body>
+                                                        <form onSubmit={handleSubmit}>
                                                                 <div id="turnDoctorInfo">
                                                                         <p>Doctor</p>
                                                                         <p>{selectedProff}</p>
@@ -159,6 +153,8 @@ const Profile = () => {
                                                                 </div>
                                                                 <input onChange={handleInputChange} name="turnDate" type="date" />
                                                                 <textarea onChange={handleInputChange} name="turnDescription" id="turnDescription" placeholder="Descripción del turno"></textarea>
+                                                                <button type="submit">Enviar turno</button>
+                                                        </form>
                                                 </Modal.Body>
                                         </Modal>
 

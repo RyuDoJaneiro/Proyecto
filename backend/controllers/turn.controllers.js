@@ -1,23 +1,24 @@
-const task = require("../../../Códigos/Taller de Programación/II/Parcial I/src/models/task");
-const Turn = require("../src/models/task");
+const Turn = require("../src/models/Turn");
 const ctrlTurn = {};
 
 ctrlTurn.getTurns = async (req, res) =>
 {
-        const turns = await task.find({turnId});
+        const turns = await task.find();
 
-        return res.json(tasks);
+        return res.json(turns);
 }
 
 ctrlTurn.postTurn = async (req, res) =>
 {
-        const { turnName, turnDescription } = await req.body;
+        const { turnDate, turnSchedule, turnDescription, turnPacient, turnDoctor } = await req.body;
 
         // Crear un nuevo turno
-        const newTurn = new task({
-                turnName,
+        const newTurn = new Turn({
+                turnDate,
+                turnSchedule,
                 turnDescription,
-                userId: req.user._id
+                turnPacient,
+                turnDoctor
         });
 
         // Intentar guardar el nuevo turno
@@ -29,3 +30,5 @@ ctrlTurn.postTurn = async (req, res) =>
                 console.log(error);
         }
 }
+
+module.exports = ctrlTurn;

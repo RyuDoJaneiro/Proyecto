@@ -15,6 +15,7 @@ require("dotenv").config();
 // Rutas
 app.use(require("./routes/user.routes"));
 app.use(require("./routes/auth.routes"));
+app.use(require("./routes/turn.routes"));
 
 const port = 4000;
 app.listen(port, () => console.log(`➔ | Servidor escuchando en el puerto ${port}`));
