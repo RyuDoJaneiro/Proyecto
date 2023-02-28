@@ -3,7 +3,7 @@ const ctrlTurn = {};
 
 ctrlTurn.getTurns = async (req, res) =>
 {
-        const turns = await task.find();
+        const turns = await Turn.find();
 
         return res.json(turns);
 }

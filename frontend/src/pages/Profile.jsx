@@ -11,6 +11,7 @@ const Profile = () => {
         const [filteredList, setFilteredList] = new useState(proffesionals);
         const [specialty, setSpecialty] = useState('')
         const [selectedProff, setSelectedProff] = useState();
+        const [turns, setTurns] = useState([]);
 
         // Modals
         const [showProff, setShowProff] = useState(false);
@@ -51,6 +52,18 @@ const Profile = () => {
                 setProffesionals(dataToJson.Users);
                 return dataToJson.Users
         }
+        
+        const getTurns = async () =>
+        {
+                const response = await fetch("http://localhost:4000/turns");
+                const dataToJson = await response.json();
+                if (!response.ok) {
+                        return console.log("No se puede traer a los profesionales");
+                }
+                setTurns(dataToJson)
+                return dataToJson
+
+        }
 
         const filterBySearch = (event) =>
         {
@@ -64,6 +77,10 @@ const Profile = () => {
         React.useEffect(() => {
                 getProffesionals()
         }, [])
+
+        React.useEffect(() => {
+                getTurns()
+        }, []);
 
         async function handleSubmit(event)
         {
@@ -91,9 +108,22 @@ const Profile = () => {
                                         <h3 id="specialText">{userData.userSpecialty}</h3>
                                 </div>
                                 <div>
-                                        <Calendar id="profileCalendar"/>
-
+                                        <div id="turnsContainer">
+                                                {turns.map(turn => (
+                                                        <div className="turnDiv" key={turn._id}>
+                                                                <h1>Fecha</h1>
+                                                                <p>{turn.turnDate}</p>
+                                                                <h1>Horario</h1>
+                                                                <p>{turn.turnSchedule}</p>
+                                                                <p>Descripción</p>
+                                                                <p className="turnDescription">{turn.turnDescription}</p>
+                                                        </div>
+                                                ))}
+                                        </div>
                                         <button id="calendarButton" type="button" onClick={handleProffShow}>Pedir turno</button>
+                                </div>
+                                
+                                        
                                         
                                         <Modal show={showProff} onHide={handleProffClose} size='lg' centered>
                                                 <Modal.Header closeButton>
@@ -121,7 +151,7 @@ const Profile = () => {
                                                                 <img id="proffesionalAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
                                                                 <h2 id="proffesionalName">{proffesional?.userName}</h2>
                                                                 <h3 id="proffesionalSpecialty">{proffesional?.userSpecialty}</h3>
-                                                        </div>
+                                                                </div>
                                                         ))}
                                                 </Modal.Body>
                                         </Modal>
@@ -151,17 +181,13 @@ const Profile = () => {
                                                                                 <option>18:30 PM a 19:00 PM</option>
                                                                         </select>
                                                                 </div>
-                                                                <input onChange={handleInputChange} name="turnDate" type="date" />
+                                                                <input onChange={handleInputChange} name="turnDate" type="date" required min={new Date().toISOString().split('T')[0]}/>
                                                                 <textarea onChange={handleInputChange} name="turnDescription" id="turnDescription" placeholder="Descripción del turno"></textarea>
                                                                 <button type="submit">Enviar turno</button>
                                                         </form>
                                                 </Modal.Body>
                                         </Modal>
-
-                                        <div id="scheduleContainer">
-                                                <div id="scheduleMessage">Selecciona un día</div>
-                                        </div>
-                                </div>
+                                
 
                         </div>
                 </>

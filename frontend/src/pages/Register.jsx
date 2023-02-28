@@ -5,6 +5,11 @@ import { useNavigate } from 'react-router-dom'
 
 export default function Register() {
 
+  const [bool, setBool] = useState(false);
+
+  const setToggleTrue = () => setBool(true);
+  const setToggleFalse = () => setBool(false);
+
   const navigate = useNavigate();
   const [data, setData] = useState({
     userName: "",
@@ -46,7 +51,7 @@ export default function Register() {
                     <div className="mb-3">
                       <label htmlFor="UserInput-register" className="form-label">Nombre de usuario</label><br/>
                       <input onChange={handleInputChange} type="text" name='userName' id="UserInput-register" aria-describedby="emailHelp"/>
-                      {false ? (
+                      {bool ? (
                         <select onChange={handleInputChange} id="selectInput-register" name='userSpecialty'>
                         <option disabled defaultValue>Especialidad</option>
                         <option disabled>⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</option>
@@ -69,9 +74,19 @@ export default function Register() {
                     <div className="mb-3">
                       <label htmlFor="PasswordInput-register" className="form-label">Confirmar Contraseña</label><br/>
                       <input onChange={handleInputChange} type="password" id="PasswordInput1-register" name="userPasswordConfirm"></input>
-                    </div>  
+                    </div> 
                     <button type="submit" id='ButtonSubmit-register'>Enviar</button>
                   </form>
+                  <div id='buttonsDiv'>
+                        <button className='registerButton' onClick={setToggleTrue}>
+                          <img className='registerImg' src="https://cdn-icons-png.flaticon.com/512/921/921059.png"/>
+                          <p className='imgP'>Doctor</p>
+                        </button>
+                        <button className='registerButton' onClick={setToggleFalse}>
+                          <img className='registerImg' src="https://cdn-icons-png.flaticon.com/512/3445/3445069.png"/>
+                          <p className='imgP'>Paciente</p>
+                        </button>
+                  </div>
                 </fieldset>
         </div>
         <Footer/>

@@ -1,0 +1,27 @@
+:root {
+        --main-color: #6D9886;
+}
+
+.registerImg {
+        max-width: 90%;
+        padding:10px;
+}
+.registerButton {
+        width: 200px;
+        height: 200px;
+        margin: 10px;
+        border-radius: 10px;
+        background-color: white;
+        border: solid 5px;
+        border-color: var(--main-color);
+        box-shadow: -14px 21px 11px -3px rgba(0,0,0,0.23);
+}
+
+#buttonsDiv {
+        position: absolute;
+        left: 45%;
+        bottom: 40%;
+}
+.imgP {
+        font-weight: bold;
+}
