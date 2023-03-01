@@ -36,7 +36,7 @@ export default function Login() {
     const response = await fetch("http://localhost:4000/login", requestOptions)
     const dataToJson = await response.json();
     await setUserData(dataToJson.user);
-    navigate("/profile");
+    if (response.ok) navigate("/profile");
   }
   
   return (

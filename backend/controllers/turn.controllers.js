@@ -3,7 +3,7 @@ const ctrlTurn = {};
 
 ctrlTurn.getTurns = async (req, res) =>
 {
-        const turns = await Turn.find();
+        const turns = await Turn.find({userPacient: `ObjectI('${req.params.id}')`});
 
         return res.json(turns);
 }

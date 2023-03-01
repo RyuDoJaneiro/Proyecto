@@ -53,9 +53,9 @@ export default function Register() {
                       <input onChange={handleInputChange} type="text" name='userName' id="UserInput-register" aria-describedby="emailHelp"/>
                       {bool ? (
                         <select onChange={handleInputChange} id="selectInput-register" name='userSpecialty'>
-                        <option disabled defaultValue>Especialidad</option>
+                        <option disabled>Especialidad</option>
                         <option disabled>⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</option>
-                        <option>Clínico</option>
+                        <option defaultValue="Clínico">Clínico</option>
                         <option>Traumatólogo</option>
                         <option>Dentista</option>
                         <option>Dermatólogo</option>
