@@ -63,8 +63,6 @@ const Profile = () => {
                         return console.log("No se puede traer los turnos");
                 }
                 setTurns(dataToJson)
-                return dataToJson
-
         }
 
         const filterBySearch = (event) =>
@@ -124,7 +122,7 @@ const Profile = () => {
                                 </div>
                                 <div>
                                         <div id="turnsContainer">
-                                                {turns.map(turn => (
+                                                {Array.isArray(turns) ? turns.map(turn => (
                                                         <div className="turnDiv" key={turn._id}>
                                                                 <p className="turnTittle">Fecha</p>
                                                                 <p>{turn.turnDate}</p>
@@ -133,7 +131,7 @@ const Profile = () => {
                                                                 <p className="turnTittle">Descripción</p>
                                                                 <p className="turnDescription">{turn.turnDescription}</p>
                                                         </div>
-                                                ))}
+                                                )) : null}
                                         </div>
                                         {!isProff ? <button id="calendarButton" type="button" onClick={handleProffShow}>Pedir turno</button> : (null)}
                                 </div>

@@ -14,11 +14,11 @@ const TurnSchema = new Schema({
                 required: true
         },
         turnPacient: {
-                type: Schema.Types.ObjectId, ref: "User",
+                type: String,
                 default: "withoutPacient"
         },
         turnDoctor: {
-                type: Schema.Types.ObjectId, ref: "User",
+                type: String,
                 default: "withoutDoctor"
         }
 }, {

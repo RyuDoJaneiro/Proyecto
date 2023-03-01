@@ -1,11 +1,18 @@
+const mongoose = require("mongoose");
+const toId = mongoose.Types.ObjectId;
 const Turn = require("../src/models/Turn");
 const ctrlTurn = {};
 
 ctrlTurn.getTurns = async (req, res) =>
 {
-        const turns = await Turn.find({userPacient: `ObjectI('${req.params.id}')`});
-
-        return res.json(turns);
+        try
+        {
+                const turns = await Turn.find({turnPacient: `${req.params.id}`});
+                return res.json(turns);
+        } catch (error)
+        {
+                console.log(error);
+        }
 }
 
 ctrlTurn.postTurn = async (req, res) =>
