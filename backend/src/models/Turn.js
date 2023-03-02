@@ -15,11 +15,17 @@ const TurnSchema = new Schema({
         },
         turnPacient: {
                 type: String,
-                default: "withoutPacient"
+                required: true
         },
         turnDoctor: {
                 type: String,
-                default: "withoutDoctor"
+                required: true
+        },
+        pacientName: {
+                type: String
+        },
+        doctorName: {
+                type: String
         }
 }, {
         timestamps: true,

@@ -136,3 +136,8 @@
         filter: brightness(50%);
 }
 
+#loginMessage {
+        color: var(--main-color);
+        font-weight: bold;
+}
+

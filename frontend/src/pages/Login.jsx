@@ -6,6 +6,7 @@ import { UserContext } from '../../context/UserContext'
 
 export default function Login() {
 
+  const [messageVisible, setMessageVisible] = useState(false);
   const navigate = useNavigate();
   const [data, setData] = useState({
     userName: "",
@@ -36,7 +37,19 @@ export default function Login() {
     const response = await fetch("http://localhost:4000/login", requestOptions)
     const dataToJson = await response.json();
     await setUserData(dataToJson.user);
-    if (response.ok) navigate("/profile");
+    if (response.ok)
+    {
+      navigate("/profile")
+    } else {showMessage()}
+  }
+
+  function showMessage()
+  {
+    setMessageVisible(true);
+    setTimeout(() =>
+    {
+      setMessageVisible(false);
+    }, 3000);
   }
   
   return (
@@ -53,6 +66,7 @@ export default function Login() {
                       <label htmlFor="PasswordInput-login" className="form-label">Contraseña</label><br/>
                       <input  onChange={handleInputChange} type="password" id="PasswordInput-login" name='userPassword'></input>
                     </div>
+                    {messageVisible ? <p id='loginMessage'>¡Algo salió mal!</p> : null}
                     <button type="submit" id='ButtonSubmit-login'>Enviar</button>
                   </form>
                 </fieldset>

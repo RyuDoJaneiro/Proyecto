@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const toId = mongoose.Types.ObjectId;
 const Turn = require("../src/models/Turn");
 const ctrlTurn = {};
 
@@ -17,7 +16,7 @@ ctrlTurn.getTurns = async (req, res) =>
 
 ctrlTurn.postTurn = async (req, res) =>
 {
-        const { turnDate, turnSchedule, turnDescription, turnPacient, turnDoctor } = await req.body;
+        const { turnDate, turnSchedule, turnDescription, turnPacient, turnDoctor, pacientName, doctorName } = await req.body;
 
         // Crear un nuevo turno
         const newTurn = new Turn({
@@ -25,7 +24,9 @@ ctrlTurn.postTurn = async (req, res) =>
                 turnSchedule,
                 turnDescription,
                 turnPacient,
-                turnDoctor
+                turnDoctor,
+                pacientName,
+                doctorName
         });
 
         // Intentar guardar el nuevo turno

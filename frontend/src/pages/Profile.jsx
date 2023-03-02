@@ -7,13 +7,19 @@ import Modal from "react-bootstrap/Modal"
 
 const Profile = () => {
         const userData = useContext(UserContext);
-        const isProff = userData.userData.userSpecialty.length > 0 ? true : false;
+        const [isProff, setIsProff] = useState();
         const [proffesionals, setProffesionals] = useState([]);
         const [filteredList, setFilteredList] = new useState(proffesionals);
         const [specialty, setSpecialty] = useState('')
         const [selectedProff, setSelectedProff] = useState();
         const [turns, setTurns] = useState([]);
         const [showMessage, setShowMessage] = useState(false);
+        const [isLoading, setIsLoading] = useState(true);
+
+        // User data
+        const [name, setName] = useState();
+        const [userSpecialty, setUserSpecialty] = useState();
+        const [userId, setUserId] = useState();
 
         // Modals
         const [showProff, setShowProff] = useState(false);
@@ -26,11 +32,13 @@ const Profile = () => {
 
         //Turn data
         const [turnData, setTurnData] = useState({
-                turnDate: new Date(),
+                turnDate: "",
                 turnSchedule: "",
                 turnDescription: "",
                 turnPacient: userData.userData._id,
-                turnDoctor: ""
+                turnDoctor: "",
+                pacientName: userData.userData.userName,
+                doctorName: selectedProff
         });
 
         function handleInputChange(event)
@@ -44,6 +52,31 @@ const Profile = () => {
         useEffect(() => {
           fetch(`http://localhost:4000/users/${specialty}`)
         }, [specialty])
+        
+        React.useEffect(() => {
+                if (userData.userData.userName != null)
+                {
+                        window.localStorage.setItem('USER_SESSION', JSON.stringify(userData))
+                }
+        }, [userData]);
+
+        React.useEffect(() => {
+                const data = window.localStorage.getItem('USER_SESSION');
+                if (data !== null)
+                {
+                        InitializeFields(data);
+                }
+        }, []);
+
+        const InitializeFields = (data) =>
+        {
+                const localUserData = JSON.parse(data);
+                setName(localUserData.userData.userName);
+                setUserSpecialty(localUserData.userData.userSpecialty);
+                setIsProff(localUserData.userData.userSpecialty !== "" ? true : false);
+                setUserId(localUserData.userData._id);
+                getTurns(localUserData.userData._id)
+        }
 
         const getProffesionals = async () => {
                 const response = await fetch('http://localhost:4000/users');
@@ -55,14 +88,22 @@ const Profile = () => {
                 return dataToJson.Users
         }
         
-        const getTurns = async () =>
+        const getTurns = async (id) =>
         {
-                const response = await fetch(`http://localhost:4000/turns/${userData.userData._id}`);
-                const dataToJson = await response.json();
-                if (!response.ok) {
-                        return console.log("No se puede traer los turnos");
+                try{
+                        const response = await fetch(`http://localhost:4000/turns/${id}`);
+                        const dataToJson = await response.json();
+                        if (!response.ok) {
+                                return console.log("No se puede traer los turnos");
+                        } else {
+                        setTurns(dataToJson)
+                        setIsLoading(false)
+                        }
+                } catch (error)
+                {
+                        console.log(error)
                 }
-                setTurns(dataToJson)
+                
         }
 
         const filterBySearch = (event) =>
@@ -77,10 +118,6 @@ const Profile = () => {
         React.useEffect(() => {
                 getProffesionals()
         }, [])
-
-        React.useEffect(() => {
-                getTurns()
-        }, []);
 
         async function handleSubmit(event)
         {
@@ -117,21 +154,27 @@ const Profile = () => {
                                 <img id="profileBanner" />
                                 <div id="profileData">
                                         <img id="userAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
-                                        <h2>{userData.userData.userName}</h2>
-                                        <h3 id="specialText">{userData.userData.userSpecialty}</h3>
+                                        <h2>{name}</h2>
+                                        <h3 id="specialText">{userSpecialty}</h3>
                                 </div>
                                 <div>
                                         <div id="turnsContainer">
-                                                {Array.isArray(turns) ? turns.map(turn => (
-                                                        <div className="turnDiv" key={turn._id}>
-                                                                <p className="turnTittle">Fecha</p>
-                                                                <p>{turn.turnDate}</p>
-                                                                <p className="turnTittle">Horario</p>
-                                                                <p>{turn.turnSchedule}</p>
-                                                                <p className="turnTittle">Descripción</p>
-                                                                <p className="turnDescription">{turn.turnDescription}</p>
-                                                        </div>
-                                                )) : null}
+                                                {
+                                                        !isLoading ?
+                                                        Array.isArray(turns) ? turns.map(turn => (
+                                                                <div className="turnDiv" key={turn._id}>
+                                                                        <p className="turnTittle">Doctor</p>
+                                                                        <p>{turn.doctorName}</p>
+                                                                        <p className="turnTittle">Fecha</p>
+                                                                        <p>{turn.turnDate.split("T")[0]}</p>
+                                                                        <p className="turnTittle">Horario</p>
+                                                                        <p>{turn.turnSchedule}</p>
+                                                                        <p className="turnTittle">Descripción</p>
+                                                                        <p className="turnDescription">{turn.turnDescription}</p>
+                                                                </div>
+                                                        )) : null
+                                                        : null
+                                                }
                                         </div>
                                         {!isProff ? <button id="calendarButton" type="button" onClick={handleProffShow}>Pedir turno</button> : (null)}
                                 </div>
@@ -155,16 +198,19 @@ const Profile = () => {
                                                         {filteredList.map(proffesional => (
                                                                 <div id="proffesionalData" data-value={proffesional._id} key={proffesional._id} onClick={(event) => {
                                                                         handleTurnShow();
-                                                                        setSelectedProff(document.getElementById("proffesionalName").innerText);
+                                                                        setSelectedProff(event.target.innerText.split("\n")[0]);
+                                                                        
                                                                         setTurnData({turnDate: new Date(),
                                                                         turnSchedule: "",
                                                                         turnDescription: "",
                                                                         turnPacient: userData.userData._id,
-                                                                        turnDoctor: document.getElementById("proffesionalData").getAttribute("data-value")});
+                                                                        turnDoctor: event.target.getAttribute("data-value"),
+                                                                        pacientName: userData.userData.userName,
+                                                                        doctorName: event.target.innerText.split("\n")[0]})
                                                                 }}>
-                                                                <img id="proffesionalAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
-                                                                <h2 id="proffesionalName">{proffesional?.userName}</h2>
-                                                                <h3 id="proffesionalSpecialty">{proffesional?.userSpecialty}</h3>
+                                                                <img id="proffesionalAvatar" onClick={(event) => {event.stopPropagation()}} src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
+                                                                <h2 id="proffesionalName" onClick={(event) => {event.stopPropagation()}}>{proffesional?.userName}</h2>
+                                                                <h3 id="proffesionalSpecialty" onClick={(event) => {event.stopPropagation()}}>{proffesional?.userSpecialty}</h3>
                                                                 </div>
                                                         ))}
                                                 </Modal.Body>
